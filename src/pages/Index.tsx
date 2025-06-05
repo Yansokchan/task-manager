@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import TaskList from '../components/TaskList';
 import TaskModal from '../components/TaskModal';
+import ProgressDashboard from '../components/ProgressDashboard';
 import { Task } from '../types/Task';
 import { useToast } from '../hooks/use-toast';
 
@@ -137,6 +138,9 @@ const Index = () => {
             <div className="text-sm text-gray-500 dark:text-gray-400">Pending</div>
           </div>
         </div>
+
+        {/* Progress Dashboard */}
+        <ProgressDashboard tasks={tasks} />
 
         {/* Task List */}
         <TaskList
