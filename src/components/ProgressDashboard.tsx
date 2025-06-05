@@ -18,7 +18,7 @@ const ProgressDashboard = ({ tasks }: ProgressDashboardProps) => {
   const completionPercentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
   const statusData = [
-    { name: 'Completed', value: completedTasks, color: '#10b981' },
+    { name: 'Completed', value: completedTasks, color: '#22c55e' },
     { name: 'In Progress', value: inProgressTasks, color: '#3b82f6' },
     { name: 'Pending', value: pendingTasks, color: '#f59e0b' },
   ].filter(item => item.value > 0);
@@ -26,27 +26,27 @@ const ProgressDashboard = ({ tasks }: ProgressDashboardProps) => {
   const priorityData = [
     { name: 'High', value: tasks.filter(t => t.priority === 'high').length, color: '#ef4444' },
     { name: 'Medium', value: tasks.filter(t => t.priority === 'medium').length, color: '#f59e0b' },
-    { name: 'Low', value: tasks.filter(t => t.priority === 'low').length, color: '#10b981' },
+    { name: 'Low', value: tasks.filter(t => t.priority === 'low').length, color: '#22c55e' },
   ].filter(item => item.value > 0);
 
   const chartConfig = {
-    completed: { label: 'Completed', color: '#10b981' },
+    completed: { label: 'Completed', color: '#22c55e' },
     inProgress: { label: 'In Progress', color: '#3b82f6' },
     pending: { label: 'Pending', color: '#f59e0b' },
     high: { label: 'High', color: '#ef4444' },
     medium: { label: 'Medium', color: '#f59e0b' },
-    low: { label: 'Low', color: '#10b981' },
+    low: { label: 'Low', color: '#22c55e' },
   };
 
   return (
     <div className="space-y-6">
       {/* Overall Progress */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Overall Progress</h3>
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Overall Progress</h3>
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600 dark:text-gray-400">Task Completion</span>
-            <span className="font-medium text-gray-900 dark:text-gray-100">
+            <span className="text-gray-600 dark:text-gray-300">Task Completion</span>
+            <span className="font-medium text-gray-900 dark:text-white">
               {completedTasks}/{totalTasks} ({Math.round(completionPercentage)}%)
             </span>
           </div>
@@ -57,8 +57,8 @@ const ProgressDashboard = ({ tasks }: ProgressDashboardProps) => {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Status Distribution Pie Chart */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Task Status Distribution</h3>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Task Status Distribution</h3>
           {statusData.length > 0 ? (
             <ChartContainer config={chartConfig} className="h-64">
               <PieChart>
@@ -92,7 +92,7 @@ const ProgressDashboard = ({ tasks }: ProgressDashboardProps) => {
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: item.color }}
                 />
-                <span className="text-sm text-gray-600 dark:text-gray-400">
+                <span className="text-sm text-gray-600 dark:text-gray-300">
                   {item.name}: {item.value}
                 </span>
               </div>
@@ -101,16 +101,16 @@ const ProgressDashboard = ({ tasks }: ProgressDashboardProps) => {
         </div>
 
         {/* Priority Distribution Bar Chart */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Priority Distribution</h3>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Priority Distribution</h3>
           {priorityData.length > 0 ? (
             <ChartContainer config={chartConfig} className="h-64">
               <BarChart data={priorityData}>
                 <XAxis 
                   dataKey="name" 
-                  className="text-gray-600 dark:text-gray-400"
+                  className="text-gray-600 dark:text-gray-300"
                 />
-                <YAxis className="text-gray-600 dark:text-gray-400" />
+                <YAxis className="text-gray-600 dark:text-gray-300" />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <Bar dataKey="value" radius={[4, 4, 0, 0]}>
                   {priorityData.map((entry, index) => (
