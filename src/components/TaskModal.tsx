@@ -14,8 +14,8 @@ const TaskModal = ({ isOpen, onClose, onSave, task }: TaskModalProps) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    status: 'pending' as const,
-    priority: 'medium' as const,
+    status: 'pending' as 'pending' | 'in-progress' | 'completed',
+    priority: 'medium' as 'low' | 'medium' | 'high',
     date: new Date().toISOString().split('T')[0],
   });
 
@@ -100,7 +100,7 @@ const TaskModal = ({ isOpen, onClose, onSave, task }: TaskModalProps) => {
                 </label>
                 <select
                   value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value as 'pending' | 'in-progress' | 'completed' })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 >
                   <option value="pending">Pending</option>
@@ -115,7 +115,7 @@ const TaskModal = ({ isOpen, onClose, onSave, task }: TaskModalProps) => {
                 </label>
                 <select
                   value={formData.priority}
-                  onChange={(e) => setFormData({ ...formData, priority: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, priority: e.target.value as 'low' | 'medium' | 'high' })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 >
                   <option value="low">Low</option>
