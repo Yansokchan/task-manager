@@ -114,27 +114,27 @@ const Index = () => {
       <div className="space-y-6">
         {/* Header Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="text-2xl font-bold text-gray-900">{tasks.length}</div>
-            <div className="text-sm text-gray-500">Total Tasks</div>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{tasks.length}</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">Total Tasks</div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="text-2xl font-bold text-blue-600">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
               {tasks.filter(t => t.status === 'in-progress').length}
             </div>
-            <div className="text-sm text-gray-500">In Progress</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">In Progress</div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="text-2xl font-bold text-green-600">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
               {tasks.filter(t => t.status === 'completed').length}
             </div>
-            <div className="text-sm text-gray-500">Completed</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">Completed</div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="text-2xl font-bold text-orange-600">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
               {tasks.filter(t => t.status === 'pending').length}
             </div>
-            <div className="text-sm text-gray-500">Pending</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">Pending</div>
           </div>
         </div>
 
