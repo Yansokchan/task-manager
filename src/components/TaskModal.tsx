@@ -1,22 +1,34 @@
-
-import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
-import { Task } from '../types/Task';
+import React, { useState, useEffect } from "react";
+import { X, Calendar as CalendarIcon, Pin } from "lucide-react";
+import { Task } from "../types/Task";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "./ui/select";
+import { Calendar } from "./ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Button } from "./ui/button";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (task: Omit<Task, 'id' | 'createdAt'>) => void;
+  onSave: (task: Omit<Task, "id" | "createdAt">) => void;
   task?: Task | null;
 }
 
 const TaskModal = ({ isOpen, onClose, onSave, task }: TaskModalProps) => {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    status: 'pending' as 'pending' | 'in-progress' | 'completed',
-    priority: 'medium' as 'low' | 'medium' | 'high',
-    date: new Date().toISOString().split('T')[0],
+    title: "",
+    description: "",
+    status: "pending" as "pending" | "in-progress" | "completed",
+    priority: "medium" as "low" | "medium" | "high",
+    date: new Date().toISOString().split("T")[0],
+    isPinned: false,
   });
 
   useEffect(() => {
@@ -27,14 +39,16 @@ const TaskModal = ({ isOpen, onClose, onSave, task }: TaskModalProps) => {
         status: task.status,
         priority: task.priority,
         date: task.date,
+        isPinned: task.isPinned || false,
       });
     } else {
       setFormData({
-        title: '',
-        description: '',
-        status: 'pending',
-        priority: 'medium',
-        date: new Date().toISOString().split('T')[0],
+        title: "",
+        description: "",
+        status: "pending",
+        priority: "medium",
+        date: new Date().toISOString().split("T")[0],
+        isPinned: false,
       });
     }
   }, [task]);
@@ -50,12 +64,15 @@ const TaskModal = ({ isOpen, onClose, onSave, task }: TaskModalProps) => {
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75 dark:bg-gray-900 dark:bg-opacity-75" onClick={onClose} />
-        
+        <div
+          className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75 dark:bg-gray-900 dark:bg-opacity-75"
+          onClick={onClose}
+        />
+
         <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-800 shadow-xl rounded-2xl">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              {task ? 'Edit Task' : 'Create New Task'}
+              {task ? "Edit Task" : "Create New Task"}
             </h3>
             <button
               onClick={onClose}
@@ -74,8 +91,10 @@ const TaskModal = ({ isOpen, onClose, onSave, task }: TaskModalProps) => {
                 type="text"
                 required
                 value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+                className="w-full px-3 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 placeholder="Enter task title"
               />
             </div>
@@ -87,8 +106,10 @@ const TaskModal = ({ isOpen, onClose, onSave, task }: TaskModalProps) => {
               <textarea
                 rows={3}
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+                className="w-full px-3 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 placeholder="Enter task description"
               />
             </div>
@@ -98,30 +119,48 @@ const TaskModal = ({ isOpen, onClose, onSave, task }: TaskModalProps) => {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Status
                 </label>
-                <select
+                <Select
                   value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as 'pending' | 'in-progress' | 'completed' })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  onValueChange={(value) =>
+                    setFormData({
+                      ...formData,
+                      status: value as "pending" | "in-progress" | "completed",
+                    })
+                  }
                 >
-                  <option value="pending">Pending</option>
-                  <option value="in-progress">In Progress</option>
-                  <option value="completed">Completed</option>
-                </select>
+                  <SelectTrigger className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition-colors">
+                    <SelectValue placeholder="Select Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="in-progress">In Progress</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Priority
                 </label>
-                <select
+                <Select
                   value={formData.priority}
-                  onChange={(e) => setFormData({ ...formData, priority: e.target.value as 'low' | 'medium' | 'high' })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  onValueChange={(value) =>
+                    setFormData({
+                      ...formData,
+                      priority: value as "low" | "medium" | "high",
+                    })
+                  }
                 >
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                </select>
+                  <SelectTrigger className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition-colors">
+                    <SelectValue placeholder="Select Priority" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
@@ -129,12 +168,57 @@ const TaskModal = ({ isOpen, onClose, onSave, task }: TaskModalProps) => {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Due Date
               </label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal px-4 py-3 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition-colors",
+                      !formData.date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {formData.date ? (
+                      format(new Date(formData.date), "PPP")
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={new Date(formData.date)}
+                    onSelect={(date) =>
+                      setFormData({
+                        ...formData,
+                        date: date
+                          ? date.toISOString().split("T")[0]
+                          : formData.date,
+                      })
+                    }
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <div className="flex items-center space-x-2">
               <input
-                type="date"
-                value={formData.date}
-                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                type="checkbox"
+                id="isPinned"
+                checked={formData.isPinned}
+                onChange={(e) =>
+                  setFormData({ ...formData, isPinned: e.target.checked })
+                }
+                className="h-4 w-4 bg-gray-500 dark:bg-gray-800 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
+              <label
+                htmlFor="isPinned"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                Pin this task
+              </label>
             </div>
 
             <div className="flex justify-end space-x-3 pt-4">
@@ -149,7 +233,7 @@ const TaskModal = ({ isOpen, onClose, onSave, task }: TaskModalProps) => {
                 type="submit"
                 className="px-4 py-2 text-sm font-medium text-white bg-blue-600 dark:bg-blue-700 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-800 transition-colors"
               >
-                {task ? 'Update Task' : 'Create Task'}
+                {task ? "Update Task" : "Create Task"}
               </button>
             </div>
           </form>

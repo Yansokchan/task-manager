@@ -1,15 +1,14 @@
-
-import React from 'react';
-import { Sun, Moon, Monitor } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
+import React from "react";
+import { Sun, Moon, Monitor } from "lucide-react";
+import { useTheme } from "../contexts/ThemeContext";
 
 const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
 
   const themes = [
-    { value: 'light', icon: Sun, label: 'Light' },
-    { value: 'dark', icon: Moon, label: 'Dark' },
-    { value: 'system', icon: Monitor, label: 'System' },
+    { value: "light", icon: Sun, label: "Light" },
+    { value: "dark", icon: Moon, label: "Dark" },
+    { value: "system", icon: Monitor, label: "System" },
   ] as const;
 
   return (
@@ -20,8 +19,8 @@ const ThemeToggle = () => {
           onClick={() => setTheme(value)}
           className={`flex items-center justify-center w-8 h-8 rounded-md transition-colors ${
             theme === value
-              ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
-              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+              ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
+              : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
           }`}
           title={label}
         >

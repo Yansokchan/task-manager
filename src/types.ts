@@ -2,9 +2,10 @@ export interface Task {
   id: string;
   title: string;
   description: string;
-  status: "pending" | "in-progress" | "completed";
+  status: "todo" | "in-progress" | "completed";
   priority: "low" | "medium" | "high";
+  dueDate: string;
   date: string;
   createdAt: string;
-  isPinned?: boolean;
+  updatedAt: string;
 }
