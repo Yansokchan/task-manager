@@ -1,3 +1,9 @@
+export interface Step {
+  id: string;
+  description: string;
+  isCompleted: boolean;
+}
+
 export interface Task {
   id: string;
   title: string;
@@ -7,4 +13,5 @@ export interface Task {
   date: string;
   createdAt: string;
   isPinned?: boolean;
+  steps?: Step[];
 }

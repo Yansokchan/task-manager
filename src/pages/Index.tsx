@@ -5,6 +5,7 @@ import TaskModal from "../components/TaskModal";
 import ProgressDashboard from "../components/ProgressDashboard";
 import { Task } from "../types/Task";
 import { useToast } from "../hooks/use-toast";
+import { CheckCircle, XCircle } from "lucide-react";
 
 // Dummy data for demonstration
 const initialTasks: Task[] = [
@@ -62,6 +63,7 @@ const Index = () => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
   const { toast } = useToast();
 
   const handleAddTask = () => {
@@ -74,23 +76,24 @@ const Index = () => {
     setIsModalOpen(true);
   };
 
-  const handleSaveTask = (taskData: Omit<Task, "id" | "createdAt">) => {
+  const handleSaveTask = (taskData: Partial<Task>) => {
     if (editingTask) {
       // Update existing task
       setTasks(
         tasks.map((task) =>
           task.id === editingTask.id
-            ? {
+            ? ({
                 ...taskData,
                 id: editingTask.id,
                 createdAt: editingTask.createdAt,
-              }
+              } as Task)
             : task
         )
       );
       toast({
         title: "Task updated",
         description: "Your task has been updated successfully.",
+        variant: "success",
       });
     } else {
       // Create new task
@@ -98,11 +101,12 @@ const Index = () => {
         ...taskData,
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
-      };
+      } as Task;
       setTasks([newTask, ...tasks]);
       toast({
         title: "Task created",
         description: "Your new task has been created successfully.",
+        variant: "success",
       });
     }
   };
@@ -118,8 +122,25 @@ const Index = () => {
     }
   };
 
+  const handlePinTask = (id: string) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id ? { ...task, isPinned: !task.isPinned } : task
+      )
+    );
+    toast({
+      title: "Task pinned",
+      description: "The task pin status has been updated.",
+      variant: "default",
+    });
+  };
+
   return (
-    <Layout onAddTask={handleAddTask}>
+    <Layout
+      onAddTask={handleAddTask}
+      viewMode={viewMode}
+      setViewMode={setViewMode}
+    >
       <div className="space-y-6">
         {/* Progress Dashboard */}
         <ProgressDashboard tasks={tasks} />
@@ -129,6 +150,8 @@ const Index = () => {
           tasks={tasks}
           onEditTask={handleEditTask}
           onDeleteTask={handleDeleteTask}
+          onPinTask={handlePinTask}
+          viewMode={viewMode}
         />
       </div>
 
